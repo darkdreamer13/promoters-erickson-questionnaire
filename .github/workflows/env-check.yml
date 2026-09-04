@@ -1,0 +1,20 @@
+name: Production env check
+
+on:
+  push:
+    paths:
+      - '.github/workflows/env-check.yml'
+
+jobs:
+  check-production-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check safe env diagnostics
+        run: |
+          python - <<'PY'
+          import urllib.request
+          url = 'https://promoters-erickson-questionnaire.vercel.app/api/env-check'
+          with urllib.request.urlopen(url, timeout=30) as response:
+              print('HTTP', response.status)
+              print(response.read().decode('utf-8'))
+          PY
